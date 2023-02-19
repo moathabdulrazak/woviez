@@ -17,6 +17,11 @@ const routes = [
     component: loadPage('AboutPage')
   },
   {
+    path: '/onShow/:id/seasons/:season/episodes/:episode',
+    name: 'episode',
+    component: loadPage('EpisodePage')
+  },
+  {
     path: '/movie/:id',
     name: 'movie',
    component: loadPage('MoviePage'),
