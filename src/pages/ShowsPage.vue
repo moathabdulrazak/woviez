@@ -14,7 +14,7 @@
       </form>
     </div>
 
-    <div class="show-list">
+    <div class="movie-list">
       <template v-if="shows.length > 0">
         <ShowCard v-for="show in shows" :key="show.id" :show="show" />
       </template>
@@ -104,3 +104,54 @@ export default {
   },
 };
 </script>
+<style>
+.btn-color{
+  background-color: #FF0000;
+}
+  .movie-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .pagination button {
+    background-color: #ffffff;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 5px;
+    color: black;
+    font-size: 1rem;
+    margin: 0 5px;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease;
+  }
+  .pagination button:hover {
+    background-color: rgb(255, 0, 0);
+    color: white;
+  }
+  .pagination button:disabled {
+    background-color: gray;
+    color: white;
+    cursor: not-allowed;
+  }
+  .search-form {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+  }
+  .search-form label {
+    font-size: 1.2rem;
+    margin-right: 10px;
+  }
+  .search-form input {
+    font-size: 1rem;
+    padding: 5px 10px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    width: 300px;
+  }
+</style>
