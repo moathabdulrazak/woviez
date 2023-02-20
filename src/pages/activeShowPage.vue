@@ -81,16 +81,22 @@ export default {
 }
 
 .episodes-list {
-  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 
 ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 li {
   margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
 }
 
 a {
@@ -102,5 +108,7 @@ select {
   border-radius: 5px;
   border: 1px solid #ccc;
   padding: 5px;
+  margin-right: 10px;
 }
+
 </style>

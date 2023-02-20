@@ -1,131 +1,122 @@
 <template>
-  <div class="episode-page">
-    <div class="video-container">
-      <iframe allowfullscreen :src="episodeUrl" frameborder="0"></iframe>
+  <div class="active-show-page">
+    <div class="show-details">
+      <div class="show-image">
+        <img :src="'https://image.tmdb.org/t/p/w500' + show?.poster_path" :alt="show?.name">
+      </div>
+      <div class="show-info">
+        <h1 class="show-title">{{ show?.name }}</h1>
+        <p class="show-overview">{{ show?.overview }}</p>
+      </div>
     </div>
-    <div class="episode-details">
-      <h2 class="title text-light">{{ episode?.name }}</h2>
-      <p class="air-date text-light ">Air date: {{ episode?.air_date }}</p>
-      <p class="overview text-light">{{ episode?.overview }}</p>
-      <div class="buttons">
-        <button class="btn text-light " v-if="prevEpisode" @click="goToEpisode(prevEpisode)" :disabled="loading">
-          Previous Episode
-        </button>
-        <button class="btn text-light" v-if="nextEpisode" @click="goToEpisode(nextEpisode)" :disabled="loading">
-          Next Episode
-        </button>
+
+    <div class="seasons-dropdown">
+      <label for="season-select">Seasons:</label>
+      <select id="season-select" v-model="selectedSeason">
+        <option v-for="season in seasons" :key="season.id" :value="season.season_number">Season {{ season.season_number }}</option>
+      </select>
+    </div>
+
+    <div class="episodes-list">
+      <div class="episodes-grid">
+        <div v-for="episode in getSelectedSeasonEpisodes()" :key="episode.id" class="episode-card">
+          <router-link :to="{ name: 'episode', params: { id: show.id, season: selectedSeason, episode: episode.episode_number }}">
+            <div class="thumbnail">
+              <img :src="'https://image.tmdb.org/t/p/w185' + episode.still_path" :alt="episode.name">
+            </div>
+            <div class="episode-title">{{ episode.name }}</div>
+          </router-link>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+const API_KEY = "88d2c735e36149b50c9d46f09826ec06";
 export default {
-  name: "EpisodePage",
+  name: "ActiveShowPage",
   data() {
     return {
-      episode: null,
       show: null,
-      season: null,
-      prevEpisode: null,
-      nextEpisode: null,
+      seasons: [],
+      selectedSeason: null,
     };
   },
   async created() {
-    await this.fetchEpisodeDetails();
-  },
-  watch: {
-    $route: {
-      immediate: true,
-      async handler() {
-        await this.fetchEpisodeDetails();
-      },
-    },
-  },
-  computed: {
-    episodeUrl() {
-      const { id, season, episode } = this.$route.params;
-      return `https://autoembed.to/tv/tmdb/${id}-${season}-${episode}`;
-    },
+    const showId = this.$route.params.id;
+    const url = `https://api.themoviedb.org/3/tv/${showId}?api_key=${API_KEY}&append_to_response=seasons`;
+    const response = await fetch(url);
+    const data = await response.json();
+    this.show = data;
+
+    this.seasons = data.seasons;
+    this.selectedSeason = this.seasons[0].season_number;
+
+    this.seasons.forEach((season) => {
+      season.episodes = [];
+      const seasonUrl = `https://api.themoviedb.org/3/tv/${showId}/season/${season.season_number}?api_key=${API_KEY}`;
+      fetch(seasonUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          season.episodes = data.episodes;
+        });
+    });
   },
   methods: {
-    async fetchEpisodeDetails() {
-      const { id, season, episode } = this.$route.params;
-
-      // Fetch episode details
-      const episodeResponse = await fetch(
-        `https://api.themoviedb.org/3/tv/${id}/season/${season}/episode/${episode}?api_key=88d2c735e36149b50c9d46f09826ec06`
-      );
-      if (!episodeResponse.ok) {
-        throw new Error(`HTTP error! status: ${episodeResponse.status}`);
-      }
-      this.episode = await episodeResponse.json();
-
-      // Fetch show details
-      const showResponse = await fetch(
-        `https://api.themoviedb.org/3/tv/${id}?api_key=88d2c735e36149b50c9d46f09826ec06`
-      );
-      if (!showResponse.ok) {
-        throw new Error(`HTTP error! status: ${showResponse.status}`);
-      }
-      this.show = await showResponse.json();
-
-      // Fetch season details
-      const seasonResponse = await fetch(
-        `https://api.themoviedb.org/3/tv/${id}/season/${season}?api_key=88d2c735e36149b50c9d46f09826ec06`
-      );
-      if (!seasonResponse.ok) {
-        throw new Error(`HTTP error! status: ${seasonResponse.status}`);
-      }
-      this.season = await seasonResponse.json();
-
-      // Set prev and next episode URLs
-      const episodeCount = this.season.episodes.length;
-      const currentEpisodeIndex = this.season.episodes.findIndex(
-        (e) => e.episode_number === this.episode.episode_number
-      );
-      if (currentEpisodeIndex > 0) {
-        this.prevEpisode = `/onShow/${id}/seasons/${season}/episodes/${
-          this.season.episodes[currentEpisodeIndex - 1].episode_number
-        }`;
-      }
-      if (currentEpisodeIndex < episodeCount - 1) {
-        this.nextEpisode = `/onShow/${id}/seasons/${season}/episodes/${
-          this.season.episodes[currentEpisodeIndex + 1].episode_number
-        }`;
-      }
-    },
-    goToEpisode(url) {
-      this.$router.push(url);
+    getSelectedSeasonEpisodes() {
+      return this.seasons.find((season) => season.season_number === this.selectedSeason)?.episodes || [];
     },
   },
 };
 </script>
+
 <style>
-.episode-page {
+.active-show-page {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  max-width: 800px;
+}
+
+.show-title {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.show-overview {
+  margin-bottom: 30px;
+}
+
+.seasons-dropdown {
+  margin-bottom: 20px;
+}
+
+.episodes-list {
+  margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  padding: 1rem;
+  justify-content: space-between;
 }
 
-.video-container {
+.episode-thumbnail {
+  width: calc(25% - 10px);
+  margin-bottom: 20px;
+}
+
+.episode-thumbnail img {
   width: 100%;
-  max-width: 600px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px #ccc;
 }
 
-.video-container iframe {
-  width: 100%;
-  height: 400px;
-}
-
-.episode-details {
-  width: 100%;
-  max-width: 600px;
-}
-
-.title {
-  font-size: 2rem;
- 
+.episode-thumbnail p {
+  margin: 5px 0;
+  font-size: 14px;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 </style>
