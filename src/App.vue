@@ -5,7 +5,7 @@
   <main class="main-bg">
     <router-view />
   </main>
-   <footer class="bg-danger">
+   <footer class="bg-danger footer-class">
     © 2023 Woviez. All rights reserved.
   </footer>
 </template>

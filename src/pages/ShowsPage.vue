@@ -10,7 +10,7 @@
           name="query"
           v-model="searchQuery"
         />
-        <button class="btn btn-dark" type="submit">search</button>
+        <button class="btn text-light" type="submit">search</button>
       </form>
     </div>
 
