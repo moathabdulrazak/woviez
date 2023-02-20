@@ -130,7 +130,7 @@ export default {
     transition: background-color 0.3s ease;
   }
   .pagination button:hover {
-    background-color: rgb(255, 0, 0);
+    background-color: #FF4136;
     color: white;
   }
   .pagination button:disabled {

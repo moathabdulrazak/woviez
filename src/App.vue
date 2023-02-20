@@ -5,7 +5,7 @@
   <main class="main-bg">
     <router-view />
   </main>
-   <footer class="bg-danger footer-class">
+   <footer class="bg-color footer-class text-light">
     © 2023 Woviez. All rights reserved.
   </footer>
 </template>
@@ -24,7 +24,12 @@ export default {
   components: { Navbar }
 }
 </script>
+
 <style lang="scss">
+
+.bg-color{
+  background-color: #FF4136;
+}
 .main-bg{
 background-color: #000000
 }
