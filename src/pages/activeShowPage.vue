@@ -46,29 +46,41 @@
 
   </div>
 </div>
-    <div class="pagination pb-2">
-
-      <button
-        class="previous-page"
-        :disabled="!hasPreviousPage"
-        @click="previousPage"
-      >
-        &lt;
-      </button>
-      <div class="page-number">{{ currentPage }}</div>
-      <button
-        class="next-page"
-        :disabled="!hasNextPage"
-        @click="nextPage"
-      >
-        &gt;
-      </button>
-
-    </div>
+<div class="pagination pb-3">
+  <button
+    class="previous-season"
+    :disabled="!hasPreviousSeason"
+    @click="previousSeason"
+  >
+    Previous Season
+  </button>
+  <!-- <button
+    class="previous-page"
+    :disabled="!hasPreviousPage"
+    @click="previousPage"
+  >
+    &lt;
+  </button> -->
+  <!-- <div class="page-number">{{ currentPage }}</div> -->
+  <!-- <button
+    class="next-page"
+    :disabled="!hasNextPage"
+    @click="nextPage"
+  >
+    &gt;
+  </button> -->
+  <button
+    class="next-season"
+    :disabled="!hasNextSeason"
+    @click="nextSeason"
+  >
+    Next Season
+  </button>
+</div>
 </template>
 <script>
 const API_KEY = "88d2c735e36149b50c9d46f09826ec06";
-const EPISODES_PER_PAGE = 9;
+const EPISODES_PER_PAGE = 150;
 
 export default {
   name: "ActiveShowPage",
