@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-color px-3 ">
     <router-link class="" :to="{ name: 'Home' }">
-      <div class="">
+      <!-- <div class="">
         <img class="img-size" alt="logo" src="/src/assets/img/favpng_movie-logo.png" height="45" />
-      </div>
+      </div> -->
     </router-link>
 
 
