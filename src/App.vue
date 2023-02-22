@@ -6,7 +6,7 @@
     <router-view />
   </main>
    <footer class="bg-color footer-class text-light">
-    © 2023 Woviez. All rights reserved.
+    © 2023 Woviez. All rights reserved
   </footer>
 </template>
 
